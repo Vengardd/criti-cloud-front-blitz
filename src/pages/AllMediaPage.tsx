@@ -94,11 +94,11 @@ export function AllMediaPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="card-glass p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">All Media</h1>
-            <p className="text-gray-600 mt-1">Browse all types of media content organized by type</p>
+            <h1 className="section-title mb-2">All Media</h1>
+            <p className="text-slate-600 text-lg">Browse all types of media content organized by type</p>
           </div>
           
           <SearchInput
@@ -110,16 +110,16 @@ export function AllMediaPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 p-4 bg-white rounded-lg border">
+        <div className="flex flex-wrap items-center gap-4 p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/30 mt-6">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Filters:</span>
+            <Filter className="h-5 w-5 text-slate-500" />
+            <span className="text-sm font-semibold text-slate-700">Filters:</span>
           </div>
           
           <select
             value={selectedType}
             onChange={(e) => handleTypeChange(e.target.value as MediaType | '')}
-            className="input w-auto min-w-[120px]"
+            className="input w-auto min-w-[140px]"
           >
             <option value="">All Types</option>
             <option value="MOVIE">Movies</option>
@@ -132,9 +132,9 @@ export function AllMediaPage() {
               type="checkbox"
               checked={showExternal}
               onChange={handleExternalToggle}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
             />
-            Include External
+            <span className="font-medium text-slate-700">Include External</span>
           </label>
         </div>
       </div>
@@ -156,21 +156,23 @@ export function AllMediaPage() {
             const colorClass = getTypeColor(type);
             
             return (
-              <div key={type} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${colorClass}`}>
-                    <Icon className="h-6 w-6 text-white" />
+              <div key={type} className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-2xl ${colorClass} shadow-lg`}>
+                    <Icon className="h-7 w-7 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-3xl font-bold gradient-text">
                     {type === 'MOVIE' ? 'Movies' : type === 'GAME' ? 'Games' : 'Media'}
                   </h2>
-                  <span className="text-gray-500">({items.length})</span>
+                  <span className="badge badge-default text-base px-4 py-2">
+                    {items.length} items
+                  </span>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
                   {items.map((item) => (
-                    <MediaDisplayCard
-                      key={item.id}
+                    <div key={item.id} className="media-card p-0 overflow-hidden">
+                      <MediaDisplayCard
                       media={item}
                       onClick={() => {
                         // Navigate to specific detail page based on type
@@ -182,7 +184,8 @@ export function AllMediaPage() {
                           window.location.href = `/media/${item.id}`;
                         }
                       }}
-                    />
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -190,21 +193,21 @@ export function AllMediaPage() {
           })}
 
           {/* Pagination */}
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-4 mt-12">
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="btn-outline px-4 py-2 disabled:opacity-50"
+              className="btn-outline px-6 py-3 disabled:opacity-50"
             >
               Previous
             </button>
-            <span className="flex items-center px-4 py-2 text-sm text-gray-600">
+            <span className="flex items-center px-6 py-3 text-sm font-medium text-slate-600 bg-white/60 backdrop-blur-sm rounded-xl">
               Page {currentPage}
             </span>
             <button
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={media.length < 20}
-              className="btn-outline px-4 py-2 disabled:opacity-50"
+              className="btn-outline px-6 py-3 disabled:opacity-50"
             >
               Next
             </button>
