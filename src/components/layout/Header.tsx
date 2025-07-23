@@ -1,4 +1,4 @@
-import { Film, Gamepad2, Star, User } from 'lucide-react';
+import { Film, Gamepad2, Star, User, Monitor } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
@@ -6,9 +6,9 @@ export function Header() {
   const location = useLocation();
 
   const navigation = [
+    { name: 'All Media', href: '/all-media', icon: Monitor },
     { name: 'Movies', href: '/movies', icon: Film },
     { name: 'Games', href: '/games', icon: Gamepad2 },
-    { name: 'Media', href: '/media', icon: Star },
     { name: 'Ratings', href: '/ratings', icon: Star },
   ];
 
