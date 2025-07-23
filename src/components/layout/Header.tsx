@@ -1,4 +1,4 @@
-import { Film, Gamepad2, Star, User, Monitor } from 'lucide-react';
+import { Film, Gamepad2, Star, User, Monitor, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
@@ -13,19 +13,25 @@ export function Header() {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="glass-nav sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="bg-primary-600 p-2 rounded-lg">
-                <Star className="h-6 w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg shadow-blue-500/30 group-hover:shadow-blue-500/50 transition-all duration-300 group-hover:scale-110">
+                  <Sparkles className="h-7 w-7 text-white" />
+                </div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
               </div>
-              <span className="text-xl font-bold text-gray-900">CritiCloud</span>
+              <div>
+                <span className="text-2xl font-bold gradient-text">CritiCloud</span>
+                <p className="text-xs text-slate-500 -mt-1">Media Rating Platform</p>
+              </div>
             </Link>
           </div>
 
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-2">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname.startsWith(item.href);
@@ -35,10 +41,8 @@ export function Header() {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    'flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    'nav-link',
+                    isActive ? 'nav-link-active' : 'nav-link-inactive'
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -51,7 +55,10 @@ export function Header() {
           <div className="flex items-center space-x-4">
             <Link
               to="/profile"
-              className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              className={cn(
+                'nav-link',
+                location.pathname === '/profile' ? 'nav-link-active' : 'nav-link-inactive'
+              )}
             >
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Profile</span>
