@@ -59,19 +59,14 @@ export const movieApi = {
     api.post('/movies', movie).then(res => res.data),
   
   getById: (id: string): Promise<MovieDTO> => {
-    // Try to get by IMDB ID first, then by internal ID
-    return api.get(`/movies`, { params: { imbdId: id } })
-      .then(res => {
-        if (res.data && res.data.length > 0) {
-          return res.data[0];
-        }
-        // Fallback to internal ID
-        return api.get(`/movies/${id}`).then(res => res.data);
-      })
-      .catch(() => {
-        // If IMDB ID search fails, try internal ID
-        return api.get(`/movies/${id}`).then(res => res.data);
-      });
+    // Check if it looks like an IMDB ID (starts with 'tt' or is a long string)
+    if (id.startsWith('tt') || id.length > 10) {
+      // Use IMDB ID search endpoint
+      return api.get(`/movie`, { params: { imbd: id } }).then(res => res.data);
+    } else {
+      // Use internal ID endpoint
+      return api.get(`/movie/${id}`).then(res => res.data);
+    }
   },
 };
 
