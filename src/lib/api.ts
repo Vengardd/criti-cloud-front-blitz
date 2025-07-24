@@ -60,12 +60,12 @@ export const movieApi = {
   
   getById: (id: string): Promise<MovieDTO> => {
     // Check if it looks like an IMDB ID (starts with 'tt' or is a long string)
-    if (id.startsWith('tt') || id.length > 10) {
+    if (id.startsWith('tt')) {
       // Use IMDB ID search endpoint
-      return api.get(`/movie`, { params: { imbd: id } }).then(res => res.data);
+      return api.get(`/movies`, { params: { imbdId: id } }).then(res => res.data);
     } else {
       // Use internal ID endpoint
-      return api.get(`/movie/${id}`).then(res => res.data);
+      return api.get(`/movies/${id}`).then(res => res.data);
     }
   },
 };

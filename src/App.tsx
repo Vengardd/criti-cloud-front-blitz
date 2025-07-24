@@ -22,6 +22,7 @@ function App() {
           <Route path="games" element={<GamesPage />} />
           <Route path="media" element={<MediaPage />} />
           <Route path="movie/:id" element={<MovieDetailPage />} />
+          <Route path="movie?imbdId=:externalId" element={<MovieDetailPage />} />
           <Route path="game/:id" element={<GameDetailPage />} />
           <Route path="media/:id" element={<MediaDetailPage />} />
           <Route path="ratings" element={<RatingsPage />} />
