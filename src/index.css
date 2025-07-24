@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  /** {*/
+  /*  @apply border-border;*/
+  /*}*/
   
   body {
     @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-slate-800 font-sans;
@@ -34,22 +35,22 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+    @apply inline-flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
     @apply px-6 py-3 shadow-sm hover:shadow-md active:scale-95;
   }
   
   .btn-primary {
-    @apply btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700;
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700;
     @apply shadow-blue-500/25 hover:shadow-blue-500/40;
   }
   
   .btn-secondary {
-    @apply btn bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300;
+    @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300;
     @apply shadow-slate-200/50 hover:shadow-slate-300/50;
   }
   
   .btn-outline {
-    @apply btn border-2 border-slate-300 bg-white/80 text-slate-700 hover:bg-white hover:border-slate-400;
+    @apply border-2 border-slate-300 bg-white/80 text-slate-700 hover:bg-white hover:border-slate-400;
     @apply backdrop-blur-sm;
   }
   
@@ -86,7 +87,7 @@
   }
 
   .feature-card {
-    @apply group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-slate-50;
+    @apply relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-slate-50;
     @apply border border-slate-200/50 p-6 shadow-lg shadow-slate-200/20;
     @apply transition-all duration-300 hover:shadow-2xl hover:shadow-slate-300/30 hover:-translate-y-2;
   }
@@ -98,7 +99,7 @@
   }
 
   .media-card {
-    @apply group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm;
+    @apply relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm;
     @apply border border-white/30 shadow-lg shadow-slate-200/20;
     @apply transition-all duration-300 hover:shadow-2xl hover:shadow-slate-300/30 hover:-translate-y-2;
   }
