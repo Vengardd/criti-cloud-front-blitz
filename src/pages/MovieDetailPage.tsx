@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, Star, ExternalLink } from 'lucide-react';
-import { movieApi, ratingApi } from '../lib/api';
-import type { MovieDTO, RatingDTO } from '../types/api';
+import { movieApi, ratingApi, mediaApi } from '../lib/api';
+import type { MovieDTO, RatingDTO, MediaDTO } from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { StarRating } from '../components/ui/StarRating';
 import { getDefaultPosterUrl, formatRuntime } from '../lib/utils';
@@ -10,6 +10,7 @@ import { getDefaultPosterUrl, formatRuntime } from '../lib/utils';
 export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<MovieDTO | null>(null);
+  const [mediaItem, setMediaItem] = useState<MediaDTO | null>(null);
   const [ratings, setRatings] = useState<RatingDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [ratingsLoading, setRatingsLoading] = useState(false);
@@ -20,19 +21,55 @@ export function MovieDetailPage() {
       
       setLoading(true);
       try {
-        const movieData = await movieApi.getById(id);
+        // Try to get movie data
+        let movieData: MovieDTO;
+        
+        if (id.startsWith('tt')) {
+          // IMDB ID - search by imbdId
+          const movies = await movieApi.search({ imbdId: id });
+          if (movies.length === 0) {
+            throw new Error('Movie not found');
+          }
+          movieData = movies[0];
+        } else {
+          // Internal ID
+          movieData = await movieApi.getById(id);
+        }
+        
         setMovie(movieData);
         
-        // Load ratings for this movie
-        setRatingsLoading(true);
+        // Try to find the corresponding media item
         try {
-          const movieRatings = await ratingApi.search({ mediaId: id });
-          setRatings(movieRatings);
+          const mediaResults = await mediaApi.search({ 
+            type: 'MOVIE',
+            title: movieData.title 
+          });
+          
+          // Find media item that matches this movie
+          const matchingMedia = mediaResults.find(media => 
+            media.externalId === movieData.imbdId || 
+            media.detailsId === movieData.id ||
+            media.name === movieData.title
+          );
+          
+          if (matchingMedia) {
+            setMediaItem(matchingMedia);
+            
+            // Load ratings for the media item
+            setRatingsLoading(true);
+            try {
+              const movieRatings = await ratingApi.search({ mediaId: matchingMedia.id });
+              setRatings(movieRatings);
+            } catch (error) {
+              console.error('Failed to load ratings:', error);
+            } finally {
+              setRatingsLoading(false);
+            }
+          }
         } catch (error) {
-          console.error('Failed to load ratings:', error);
-        } finally {
-          setRatingsLoading(false);
+          console.error('Failed to find media item:', error);
         }
+        
       } catch (error) {
         console.error('Failed to load movie:', error);
       } finally {
@@ -124,6 +161,13 @@ export function MovieDetailPage() {
                 <span className="text-sm text-gray-600">IMDB ID: {movie.imbdId}</span>
               </div>
             )}
+            
+            {mediaItem && (
+              <div className="flex items-center gap-2 mb-4">
+                <Star className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Media ID: {mediaItem.id}</span>
+              </div>
+            )}
 
             {/* Average Rating */}
             {ratings.length > 0 && (
@@ -155,6 +199,8 @@ export function MovieDetailPage() {
               <div className="flex justify-center py-8">
                 <LoadingSpinner size="md" />
               </div>
+            ) : !mediaItem ? (
+              <p className="text-gray-500">No media item found for this movie. Ratings are not available.</p>
             ) : ratings.length === 0 ? (
               <p className="text-gray-500">No ratings yet. Be the first to rate this movie!</p>
             ) : (
