@@ -76,7 +76,8 @@ export function MoviesPage() {
               details={movie}
               onClick={() => {
                 // Navigate to movie detail page
-                window.location.href = `/movies/${movie.id}`;
+                const movieId = movie.imbdId || movie.id;
+                window.location.href = `/movie/${movieId}`;
               }}
             />
           ))}

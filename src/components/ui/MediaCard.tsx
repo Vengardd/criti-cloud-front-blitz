@@ -22,6 +22,15 @@ export function MediaCard({ media, details, rating, onRate, onClick }: MediaCard
     return media.detailsType === 'GAME' && details !== undefined && 'summary' in details;
   };
 
+  const getNavigationId = () => {
+    if (media.detailsType === 'MOVIE' && isMovie(details)) {
+      return details.imbdId || media.externalId || media.detailsId || media.id;
+    } else if (media.detailsType === 'GAME' && isGame(details)) {
+      return details.igdbId || media.externalId || media.detailsId || media.id;
+    }
+    return media.externalId || media.detailsId || media.id;
+  };
+
   const getTypeBadge = () => {
     switch (media.detailsType) {
       case 'MOVIE':

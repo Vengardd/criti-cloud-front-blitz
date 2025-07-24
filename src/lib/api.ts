@@ -58,8 +58,21 @@ export const movieApi = {
   create: (movie: MovieDTO): Promise<MovieDTO> =>
     api.post('/movies', movie).then(res => res.data),
   
-  getById: (id: string): Promise<MovieDTO> =>
-    api.get(`/movies/${id}`).then(res => res.data),
+  getById: (id: string): Promise<MovieDTO> => {
+    // Try to get by IMDB ID first, then by internal ID
+    return api.get(`/movies`, { params: { imbdId: id } })
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          return res.data[0];
+        }
+        // Fallback to internal ID
+        return api.get(`/movies/${id}`).then(res => res.data);
+      })
+      .catch(() => {
+        // If IMDB ID search fails, try internal ID
+        return api.get(`/movies/${id}`).then(res => res.data);
+      });
+  },
 };
 
 // Game API
@@ -67,8 +80,21 @@ export const gameApi = {
   search: (params: GameSearchParams = {}): Promise<GameDTO[]> =>
     api.get('/games', { params }).then(res => res.data),
   
-  getById: (id: string): Promise<GameDTO> =>
-    api.get(`/games/${id}`).then(res => res.data),
+  getById: (id: string): Promise<GameDTO> => {
+    // Try to get by IGDB ID first, then by internal ID
+    return api.get(`/games`, { params: { igdbId: id } })
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          return res.data[0];
+        }
+        // Fallback to internal ID
+        return api.get(`/games/${id}`).then(res => res.data);
+      })
+      .catch(() => {
+        // If IGDB ID search fails, try internal ID
+        return api.get(`/games/${id}`).then(res => res.data);
+      });
+  },
 };
 
 // Rating API

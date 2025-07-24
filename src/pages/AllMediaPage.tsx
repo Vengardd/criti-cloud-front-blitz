@@ -177,9 +177,9 @@ export function AllMediaPage() {
                       onClick={() => {
                         // Navigate to specific detail page based on type
                         if (item.detailsType === 'MOVIE') {
-                          window.location.href = `/movie/${item.detailsId || item.id}`;
+                          window.location.href = `/movie/${item.externalId || item.detailsId || item.id}`;
                         } else if (item.detailsType === 'GAME') {
-                          window.location.href = `/game/${item.detailsId || item.id}`;
+                          window.location.href = `/game/${item.externalId || item.detailsId || item.id}`;
                         } else {
                           window.location.href = `/media/${item.id}`;
                         }
