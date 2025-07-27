@@ -8,10 +8,15 @@ import type {
   SearchParams,
   MovieSearchParams,
   GameSearchParams,
-  RatingSearchParams
+  RatingSearchParams,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse
 } from '../types/api';
 
-const API_BASE_URL = 'https://criti-cloud-production.up.railway.app';
+const API_BASE_URL = 'http://localhost:8081/';
+
+const getAuthToken = () => localStorage.getItem('auth_token');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -20,11 +25,36 @@ const api = axios.create({
   },
 });
 
+// Add auth token to requests
+api.interceptors.request.use(
+  (config) => {
+    const token = getAuthToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Error handling interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error('API Error:', error);
+
+    // Handle authentication errors
+    if (error.response && error.response.status === 401) {
+      // Clear stored auth data
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_data');
+
+      // Redirect to login page if not already there
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+
     throw error;
   }
 );
@@ -108,4 +138,47 @@ export const ratingApi = {
 export const testApi = {
   test: (): Promise<string> =>
     api.get('/test').then(res => res.data),
+};
+
+// Auth API
+export const authApi = {
+  login: (credentials: LoginRequest): Promise<AuthResponse> =>
+    api.post('/auth/login', credentials).then(res => {
+      const authData = res.data;
+      // Store token and user data
+      localStorage.setItem('auth_token', authData.token);
+      localStorage.setItem('user_data', JSON.stringify({
+        id: authData.userId,
+        nickname: authData.nickname,
+        email: authData.email
+      }));
+      return authData;
+    }),
+
+  register: (userData: RegisterRequest): Promise<AuthResponse> =>
+    api.post('/auth/register', userData).then(res => {
+      const authData = res.data;
+      // Store token and user data
+      localStorage.setItem('auth_token', authData.token);
+      localStorage.setItem('user_data', JSON.stringify({
+        id: authData.userId,
+        nickname: authData.nickname,
+        email: authData.email
+      }));
+      return authData;
+    }),
+
+  logout: (): void => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_data');
+  },
+
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('auth_token');
+  },
+
+  getCurrentUser: (): { id: string; nickname: string; email: string } | null => {
+    const userData = localStorage.getItem('user_data');
+    return userData ? JSON.parse(userData) : null;
+  }
 };

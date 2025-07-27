@@ -1,6 +1,8 @@
-import { Film, Gamepad2, Star, User, Monitor, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Film, Gamepad2, Star, Monitor, Sparkles, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
+import { UserMenu } from '../auth/UserMenu';
 
 export function Header() {
   const location = useLocation();
@@ -53,16 +55,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Link
-              to="/profile"
-              className={cn(
-                'nav-link',
-                location.pathname === '/profile' ? 'nav-link-active' : 'nav-link-inactive'
-              )}
-            >
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
-            </Link>
+            <UserMenu />
           </div>
         </div>
       </div>
