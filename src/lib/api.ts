@@ -14,7 +14,7 @@ import type {
   AuthResponse
 } from '../types/api';
 
-const API_BASE_URL = 'http://localhost:8081/';
+const API_BASE_URL = 'https://criti-cloud-production.up.railway.app';
 
 const getAuthToken = () => localStorage.getItem('auth_token');
 
