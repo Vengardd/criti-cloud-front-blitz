@@ -1,18 +1,19 @@
 import axios from 'axios';
-import type {
-  UserDTO,
-  MediaDTO,
-  RatingDTO,
-  MovieDTO,
-  GameDTO,
-  SearchParams,
-  MovieSearchParams,
-  GameSearchParams,
-  RatingSearchParams,
-  LoginRequest,
-  RegisterRequest,
-  AuthResponse
+import {
+    UserDTO,
+    MediaDTO,
+    RatingDTO,
+    MovieDTO,
+    GameDTO,
+    SearchParams,
+    MovieSearchParams,
+    GameSearchParams,
+    RatingSearchParams,
+    LoginRequest,
+    RegisterRequest,
+    AuthResponse, NewRatingRequestDTO
 } from '../types/api';
+import type { NewRatingRequest } from '../types/api-requests';
 
 const API_BASE_URL = 'https://criti-cloud-production.up.railway.app';
 
@@ -127,7 +128,7 @@ export const ratingApi = {
   search: (params: RatingSearchParams = {}): Promise<RatingDTO[]> =>
     api.get('/ratings', { params }).then(res => res.data),
   
-  create: (rating: RatingDTO): Promise<RatingDTO> =>
+  create: (rating: NewRatingRequestDTO): Promise<RatingDTO> =>
     api.post('/ratings', rating).then(res => res.data),
   
   getById: (id: string): Promise<RatingDTO> =>

@@ -23,6 +23,12 @@ export interface RatingDTO {
   source: 'APP';
 }
 
+export interface NewRatingRequestDTO {
+  mediaId: string;
+  rating: number;
+  source: 'APP';
+}
+
 export interface MovieDTO {
   id?: string;
   title: string;

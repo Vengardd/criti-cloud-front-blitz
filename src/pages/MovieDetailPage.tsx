@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, User, Star, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User, Star, ExternalLink, PlusCircle } from 'lucide-react';
 import { movieApi, ratingApi, mediaApi } from '../lib/api';
 import type { MovieDTO, RatingDTO, MediaDTO } from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { StarRating } from '../components/ui/StarRating';
+import { RatingSection } from '../components/rating/RatingSection';
 import { getDefaultPosterUrl, formatRuntime } from '../lib/utils';
+import { useAuth } from '../contexts/AuthContext';
 
 export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { isAuthenticated } = useAuth();
   const [movie, setMovie] = useState<MovieDTO | null>(null);
   const [mediaItem, setMediaItem] = useState<MediaDTO | null>(null);
   const [ratings, setRatings] = useState<RatingDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [ratingsLoading, setRatingsLoading] = useState(false);
+  const [showRatingInput, setShowRatingInput] = useState(false);
 
   useEffect(() => {
     const loadMovieData = async () => {
@@ -192,33 +196,23 @@ export function MovieDetailPage() {
           )}
 
           {/* Ratings Section */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
-            
-            {ratingsLoading ? (
+          {ratingsLoading ? (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
               <div className="flex justify-center py-8">
                 <LoadingSpinner size="md" />
               </div>
-            ) : !mediaItem ? (
+            </div>
+          ) : !mediaItem ? (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
               <p className="text-gray-500">No media item found for this movie. Ratings are not available.</p>
-            ) : ratings.length === 0 ? (
-              <p className="text-gray-500">No ratings yet. Be the first to rate this movie!</p>
-            ) : (
-              <div className="space-y-4">
-                {ratings.map((rating) => (
-                  <div key={rating.id} className="flex items-center justify-between p-4 bg-white rounded-lg border">
-                    <div>
-                      <p className="font-medium text-gray-900">{rating.user.nickname}</p>
-                      <p className="text-sm text-gray-600">User ID: {rating.user.id?.slice(0, 8)}...</p>
-                    </div>
-                    <StarRating rating={rating.rating} readonly size="sm" />
-                  </div>
-                ))}
-              </div>
-            )}
+            </div>
+          ) : (
+            <RatingSection media={mediaItem} initialRatings={ratings} />
+          )}
           </div>
         </div>
       </div>
-    </div>
   );
 }

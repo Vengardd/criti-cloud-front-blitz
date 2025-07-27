@@ -29,7 +29,7 @@ function App() {
             <Route path="media" element={<MediaPage />} />
             <Route path="movie/:id" element={<MovieDetailPage />} />
             <Route path="movie?imbdId=:externalId" element={<MovieDetailPage />} />
-            <Route path="game/:id" element={<GameDetailPage />} />
+            <Route path="games/:id" element={<GameDetailPage />} />
             <Route path="media/:id" element={<MediaDetailPage />} />
 
             {/* Auth routes */}

@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Star, ExternalLink } from 'lucide-react';
 import { gameApi, ratingApi } from '../lib/api';
-import type { GameDTO, RatingDTO } from '../types/api';
+import type {GameDTO, MediaDTO, RatingDTO} from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { StarRating } from '../components/ui/StarRating';
+import { RatingSection } from '../components/rating/RatingSection';
 import { getDefaultPosterUrl } from '../lib/utils';
 
 export function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [game, setGame] = useState<GameDTO | null>(null);
   const [ratings, setRatings] = useState<RatingDTO[]>([]);
+  const [mediaItem, setMediaItem] = useState<MediaDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [ratingsLoading, setRatingsLoading] = useState(false);
 
@@ -22,6 +23,14 @@ export function GameDetailPage() {
       try {
         const gameData = await gameApi.getById(id);
         setGame(gameData);
+
+        const newMedia: MediaDTO = {
+          id: gameData.id,
+          name: gameData.title,
+          detailsType: 'GAME'
+        };
+
+        setMediaItem(newMedia);
         
         // Load ratings for this game
         setRatingsLoading(true);
@@ -127,29 +136,21 @@ export function GameDetailPage() {
           )}
 
           {/* Ratings Section */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
-            
-            {ratingsLoading ? (
-              <div className="flex justify-center py-8">
-                <LoadingSpinner size="md" />
+          {ratingsLoading ? (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
+                <div className="flex justify-center py-8">
+                  <LoadingSpinner size="md" />
+                </div>
               </div>
-            ) : ratings.length === 0 ? (
-              <p className="text-gray-500">No ratings yet. Be the first to rate this game!</p>
-            ) : (
-              <div className="space-y-4">
-                {ratings.map((rating) => (
-                  <div key={rating.id} className="flex items-center justify-between p-4 bg-white rounded-lg border">
-                    <div>
-                      <p className="font-medium text-gray-900">{rating.user.nickname}</p>
-                      <p className="text-sm text-gray-600">User ID: {rating.user.id?.slice(0, 8)}...</p>
-                    </div>
-                    <StarRating rating={rating.rating} readonly size="sm" />
-                  </div>
-                ))}
+          ) : !mediaItem ? (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">User Ratings</h2>
+                <p className="text-gray-500">No media item found for this movie. Ratings are not available.</p>
               </div>
-            )}
-          </div>
+          ) : (
+              <RatingSection media={mediaItem} initialRatings={ratings} />
+          )}
         </div>
       </div>
     </div>

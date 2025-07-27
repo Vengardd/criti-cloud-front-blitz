@@ -1,67 +1,54 @@
+import { useState } from 'react';
 import { Star } from 'lucide-react';
-import { cn } from '../../lib/utils';
 
 interface StarRatingProps {
   rating: number;
-  maxRating?: number;
-  onRatingChange?: (rating: number) => void;
   readonly?: boolean;
+  onRatingChange?: (rating: number) => void;
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
 }
 
 export function StarRating({
   rating,
-  maxRating = 5,
+  readonly = true,
   onRatingChange,
-  readonly = false,
-  size = 'md',
-  className
+  size = 'md'
 }: StarRatingProps) {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-5 w-5',
-    lg: 'h-6 w-6'
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const sizes = {
+    sm: { star: 'h-4 w-4', gap: 'gap-1' },
+    md: { star: 'h-5 w-5', gap: 'gap-1.5' },
+    lg: { star: 'h-7 w-7', gap: 'gap-2' }
   };
 
-  const handleStarClick = (starRating: number) => {
-    if (!readonly && onRatingChange) {
-      onRatingChange(starRating);
-    }
+  const handleClick = (newRating: number) => {
+    if (readonly) return;
+    onRatingChange?.(newRating);
   };
 
   return (
-    <div className={cn('flex items-center gap-1', className)}>
-      {Array.from({ length: maxRating }, (_, index) => {
-        const starRating = index + 1;
-        const isFilled = starRating <= rating;
-        
+    <div 
+      className={`flex items-center ${sizes[size].gap}`}
+      onMouseLeave={() => setHoverRating(0)}
+    >
+      {[1, 2, 3, 4, 5].map((star) => {
+        const isActive = star <= (hoverRating || rating);
         return (
           <button
-            key={index}
+            key={star}
             type="button"
-            onClick={() => handleStarClick(starRating)}
+            className={`focus:outline-none transition-transform ${!readonly && 'hover:scale-110'}`}
+            onClick={() => handleClick(star)}
+            onMouseEnter={() => !readonly && setHoverRating(star)}
             disabled={readonly}
-            className={cn(
-              'transition-colors',
-              !readonly && 'hover:scale-110 cursor-pointer',
-              readonly && 'cursor-default'
-            )}
           >
-            <Star
-              className={cn(
-                sizeClasses[size],
-                isFilled 
-                  ? 'fill-yellow-400 text-yellow-400' 
-                  : 'text-gray-300 hover:text-yellow-400'
-              )}
+            <Star 
+              className={`${sizes[size].star} ${isActive ? 'text-yellow-400 fill-current' : 'text-gray-300'} transition-colors`} 
             />
           </button>
         );
       })}
-      <span className="ml-2 text-sm text-gray-600">
-        {rating.toFixed(1)}
-      </span>
     </div>
   );
 }
