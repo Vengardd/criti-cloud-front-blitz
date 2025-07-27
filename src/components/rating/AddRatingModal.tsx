@@ -66,9 +66,9 @@ export function AddRatingModal({ media, onClose, onSuccess }: AddRatingModalProp
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center justify-center py-4">
             <StarRatingInput 
-              onChange={setRating} 
-              size="lg" 
-              disabled={isSubmitting}
+              onChange={setRating}
+              initialRating={1}
+              size="lg"
             />
             <p className="mt-2 text-gray-600">
               {rating === 0 ? 'Select a rating' : `Your rating: ${rating}/5`}
