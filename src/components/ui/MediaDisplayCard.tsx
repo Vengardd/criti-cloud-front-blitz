@@ -1,4 +1,4 @@
-import { Calendar, Clock, User, Star, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import type { MediaDTO } from '../../types/api';
 import { getDefaultPosterUrl, truncateText } from '../../lib/utils';
 
@@ -60,19 +60,6 @@ export function MediaDisplayCard({ media, onClick }: MediaDisplayCardProps) {
         <h3 className="font-semibold text-lg leading-tight group-hover:text-primary-600 transition-colors">
           {truncateText(media.name, 50)}
         </h3>
-        
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>ID: {media.id?.slice(0, 8)}...</span>
-          {media.detailsId && (
-            <span>Details: {media.detailsId.slice(0, 8)}...</span>
-          )}
-        </div>
-
-        {media.externalId && (
-          <div className="text-xs text-gray-500">
-            External ID: {truncateText(media.externalId, 20)}
-          </div>
-        )}
       </div>
     </div>
   );
