@@ -216,7 +216,7 @@ export function HomePage() {
                     if (media.detailsType === 'MOVIE') {
                       window.location.href = `/movie/${media.externalId || media.detailsId || media.id}`;
                     } else if (media.detailsType === 'GAME') {
-                      window.location.href = `/game/${media.externalId || media.detailsId || media.id}`;
+                      window.location.href = `/games/${media.externalId || media.detailsId || media.id}`;
                     } else {
                       window.location.href = `/media/${media.id}`;
                     }
