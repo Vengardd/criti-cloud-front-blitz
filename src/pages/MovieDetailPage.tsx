@@ -1,23 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, User, Star, ExternalLink, PlusCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User, Star } from 'lucide-react';
 import { movieApi, ratingApi, mediaApi } from '../lib/api';
 import type { MovieDTO, RatingDTO, MediaDTO } from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { StarRating } from '../components/ui/StarRating';
 import { RatingSection } from '../components/rating/RatingSection';
 import { getDefaultPosterUrl, formatRuntime } from '../lib/utils';
-import { useAuth } from '../contexts/AuthContext';
 
 export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
   const [movie, setMovie] = useState<MovieDTO | null>(null);
   const [mediaItem, setMediaItem] = useState<MediaDTO | null>(null);
   const [ratings, setRatings] = useState<RatingDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [ratingsLoading, setRatingsLoading] = useState(false);
-  const [showRatingInput, setShowRatingInput] = useState(false);
 
   useEffect(() => {
     const loadMovieData = async () => {
@@ -158,20 +154,6 @@ export function MovieDetailPage() {
                 </div>
               )}
             </div>
-
-            {movie.imbdId && (
-              <div className="flex items-center gap-2 mb-4">
-                <ExternalLink className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">IMDB ID: {movie.imbdId}</span>
-              </div>
-            )}
-            
-            {mediaItem && (
-              <div className="flex items-center gap-2 mb-4">
-                <Star className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Media ID: {mediaItem.id}</span>
-              </div>
-            )}
 
             {/* Average Rating */}
             {ratings.length > 0 && (
