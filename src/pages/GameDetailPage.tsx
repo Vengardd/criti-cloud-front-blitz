@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Star } from 'lucide-react';
 import { gameApi, ratingApi } from '../lib/api';
 import type {GameDTO, MediaDTO, RatingDTO} from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -105,13 +105,6 @@ export function GameDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">{game.title}</h1>
-            
-            {game.igdbId && (
-              <div className="flex items-center gap-2 mb-4">
-                <ExternalLink className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">IGDB ID: {game.igdbId}</span>
-              </div>
-            )}
 
             {/* Average Rating */}
             {ratings.length > 0 && (
