@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Film, Gamepad2, Star, TrendingUp, Sparkles, Zap, Activity } from 'lucide-react';
+import {Film, Gamepad2, Star, TrendingUp, Sparkles, Zap, Activity, Clipboard} from 'lucide-react';
 import { mediaApi, testApi } from '../lib/api';
 import type { MediaDTO } from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -40,6 +40,14 @@ export function HomePage() {
       href: '/movies',
       gradient: 'from-blue-500 to-cyan-500',
       bgGradient: 'from-blue-50 to-cyan-50'
+    },
+    {
+      name: 'Series',
+      description: 'Discover and rate your favorite series with detailed information',
+      icon: Clipboard,
+      href: '/series',
+      gradient: 'from-purple-500 to-cyan-500',
+      bgGradient: 'from-purple-50 to-cyan-50'
     },
     {
       name: 'Games',
@@ -137,7 +145,7 @@ export function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
@@ -215,7 +223,9 @@ export function HomePage() {
                     // Navigate to specific detail page based on type
                     if (media.detailsType === 'MOVIE') {
                       window.location.href = `/movie/${media.externalId || media.detailsId || media.id}`;
-                    } else if (media.detailsType === 'GAME') {
+                    } else if (media.detailsType === 'SERIES') {
+                      window.location.href = `/series/${media.externalId || media.detailsId || media.id}`;
+                    }else if (media.detailsType === 'GAME') {
                       window.location.href = `/games/${media.externalId || media.detailsId || media.id}`;
                     } else {
                       window.location.href = `/media/${media.id}`;

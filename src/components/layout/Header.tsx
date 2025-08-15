@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Film, Gamepad2, Star, Monitor, Sparkles, Menu, X } from 'lucide-react';
+import { Film, Gamepad2, Star, Monitor, Sparkles, Clapperboard } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { UserMenu } from '../auth/UserMenu';
@@ -10,8 +9,9 @@ export function Header() {
   const navigation = [
     { name: 'All Media', href: '/all-media', icon: Monitor },
     { name: 'Movies', href: '/movies', icon: Film },
+    { name: 'Series', href: '/series', icon: Clapperboard},
     { name: 'Games', href: '/games', icon: Gamepad2 },
-    { name: 'Ratings', href: '/ratings', icon: Star },
+    { name: 'Ratings', href: '/ratings', icon: Star }
   ];
 
   return (

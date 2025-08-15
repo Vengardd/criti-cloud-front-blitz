@@ -11,9 +11,8 @@ import {
     RatingSearchParams,
     LoginRequest,
     RegisterRequest,
-    AuthResponse, NewRatingRequestDTO
+    AuthResponse, NewRatingRequestDTO, SeriesSearchParams, SeriesDTO
 } from '../types/api';
-import type { NewRatingRequest } from '../types/api-requests';
 
 const API_BASE_URL = 'https://criti-cloud-production.up.railway.app';
 
@@ -86,9 +85,6 @@ export const movieApi = {
   search: (params: MovieSearchParams = {}): Promise<MovieDTO[]> =>
     api.get('/movies', { params }).then(res => res.data),
   
-  create: (movie: MovieDTO): Promise<MovieDTO> =>
-    api.post('/movies', movie).then(res => res.data),
-  
   getById: (id: string): Promise<MovieDTO> => {
     // Check if it looks like an IMDB ID (starts with 'tt' or is a long string)
     if (id.startsWith('tt')) {
@@ -99,6 +95,23 @@ export const movieApi = {
       return api.get(`/movies/${id}`).then(res => res.data);
     }
   },
+};
+
+// Series API
+export const seriesApi = {
+    search: (params: SeriesSearchParams = {}): Promise<SeriesDTO[]> =>
+        api.get('/series', { params }).then(res => res.data),
+
+    getById: (id: string): Promise<SeriesDTO> => {
+        // Check if it looks like an IMDB ID (starts with 'tt' or is a long string)
+        if (id.startsWith('tt')) {
+            // Use IMDB ID search endpoint
+            return api.get(`/series`, { params: { imbdId: id } }).then(res => res.data);
+        } else {
+            // Use internal ID endpoint
+            return api.get(`/series/${id}`).then(res => res.data);
+        }
+    },
 };
 
 // Game API
@@ -172,10 +185,6 @@ export const authApi = {
   logout: (): void => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
-  },
-
-  isAuthenticated: (): boolean => {
-    return !!localStorage.getItem('auth_token');
   },
 
   getCurrentUser: (): { id: string; nickname: string; email: string } | null => {

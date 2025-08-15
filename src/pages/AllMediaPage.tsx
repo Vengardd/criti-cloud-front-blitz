@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Filter, Film, Gamepad2, Monitor, Search, Globe, Database } from 'lucide-react';
+import {Filter, Film, Gamepad2, Monitor, Search, Globe, Database, Clapperboard} from 'lucide-react';
 import { mediaApi } from '../lib/api';
 import type { MediaDTO, MediaType } from '../types/api';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -40,7 +40,7 @@ export function AllMediaPage() {
 
   useEffect(() => {
     // Reset type selection when switching to internal mode
-    if (searchMode === 'internal' && selectedType && !['MOVIE', 'GAME', 'MEDIA'].includes(selectedType)) {
+    if (searchMode === 'internal' && selectedType && !['MOVIE', 'GAME', 'MEDIA', 'SERIES'].includes(selectedType)) {
       setSelectedType('');
     }
     
@@ -83,12 +83,14 @@ export function AllMediaPage() {
     if (searchMode === 'external') {
       return [
         { value: 'MOVIE', label: 'Movies' },
+        { value: 'SERIES', label: 'Series' },
         { value: 'GAME', label: 'Games' }
       ];
     } else {
       return [
         { value: '', label: 'All Types' },
         { value: 'MOVIE', label: 'Movies' },
+        { value: 'SERIES', label: 'Series' },
         { value: 'GAME', label: 'Games' },
         { value: 'MEDIA', label: 'Media' }
       ];
@@ -99,7 +101,7 @@ export function AllMediaPage() {
     if (searchMode === 'internal') {
       return true; // Internal search always works
     } else {
-      return selectedType === 'MOVIE' || selectedType === 'GAME'; // External requires specific type
+      return selectedType === 'MOVIE' || selectedType === 'SERIES' || selectedType === 'GAME'; // External requires specific type
     }
     setCurrentPage(1);
   };
@@ -108,6 +110,8 @@ export function AllMediaPage() {
     switch (type) {
       case 'MOVIE':
         return Film;
+      case 'SERIES':
+        return Clapperboard;
       case 'GAME':
         return Gamepad2;
       default:
@@ -119,10 +123,12 @@ export function AllMediaPage() {
     switch (type) {
       case 'MOVIE':
         return 'bg-blue-500';
+      case 'SERIES':
+        return 'bg-purple-500'
       case 'GAME':
         return 'bg-green-500';
       default:
-        return 'bg-purple-500';
+        return 'bg-gray-500';
     }
   };
 
@@ -291,7 +297,7 @@ export function AllMediaPage() {
                     <Icon className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold gradient-text">
-                    {type === 'MOVIE' ? 'Movies' : type === 'GAME' ? 'Games' : 'Media'}
+                    {type === 'MOVIE' ? 'Movies' : type === 'GAME' ? 'Games' : type === 'SERIES' ? 'SERIES' : 'Media'}
                   </h2>
                   <span className="badge badge-default text-base px-4 py-2">
                     {items.length} items
@@ -314,6 +320,8 @@ export function AllMediaPage() {
                           window.location.href = `/movie/${item.externalId || item.detailsId || item.id}`;
                         } else if (item.detailsType === 'GAME') {
                           window.location.href = `/game/${item.externalId || item.detailsId || item.id}`;
+                        } else if (item.detailsType === 'SERIES') {
+                          window.location.href = `/series/${item.externalId || item.detailsId || item.id}`;
                         } else {
                           window.location.href = `/media/${item.id}`;
                         }

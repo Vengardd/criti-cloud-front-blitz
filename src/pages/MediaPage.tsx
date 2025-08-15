@@ -92,6 +92,7 @@ export function MediaPage() {
           >
             <option value="">All Types</option>
             <option value="MOVIE">Movies</option>
+            <option value="SERIES">Series</option>
             <option value="GAME">Games</option>
             <option value="MEDIA">Media</option>
           </select>

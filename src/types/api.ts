@@ -48,7 +48,17 @@ export interface GameDTO {
   posterUrl?: string;
 }
 
-export type MediaType = 'MEDIA' | 'MOVIE' | 'GAME';
+export interface SeriesDTO {
+  id?: string;
+  title: string;
+  year?: string;
+  seasons?: number;
+  plot?: string;
+  imbdId?: string;
+  posterUrl?: string;
+}
+
+export type MediaType = 'MEDIA' | 'MOVIE' | 'GAME' | 'SERIES';
 
 export interface SearchParams {
   type?: MediaType;
@@ -66,6 +76,11 @@ export interface MovieSearchParams {
 export interface GameSearchParams {
   title?: string;
   igdbId?: string;
+}
+
+export interface SeriesSearchParams {
+  imbdId?: string;
+  title?: string;
 }
 
 export interface RatingSearchParams {

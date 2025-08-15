@@ -14,6 +14,8 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import {SeriesPage} from "./pages/SeriesPage.tsx";
+import {SeriesDetailPage} from "./pages/SeriesDetailPage.tsx";
 
 function App() {
   return (
@@ -25,9 +27,11 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="all-media" element={<AllMediaPage />} />
             <Route path="movies" element={<MoviesPage />} />
+            <Route path="series" element={<SeriesPage />} />
             <Route path="games" element={<GamesPage />} />
             <Route path="media" element={<MediaPage />} />
             <Route path="movie/:id" element={<MovieDetailPage />} />
+            <Route path="series/:id" element={<SeriesDetailPage />} />
             <Route path="movie?imbdId=:externalId" element={<MovieDetailPage />} />
             <Route path="games/:id" element={<GameDetailPage />} />
             <Route path="media/:id" element={<MediaDetailPage />} />
